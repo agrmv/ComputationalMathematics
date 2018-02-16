@@ -33,9 +33,9 @@ decltype(result)& gauss(decltype(matrix)& matrix) {
             }
         }
     }
-    for (auto i = static_cast<int>(n - 1); i >= 0; --i) {
+    for (size_t  i = (n - 1); i > 0; --i) {
         result[i] = matrix[i][n] / matrix[i][i];
-        for (int k = i - 1; k >= 0; --k) {
+        for (size_t  k = i - 1; k > 0; --k) {
             matrix[k][n] -= matrix[k][i] * result[i];
         }
     }
