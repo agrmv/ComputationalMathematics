@@ -12,7 +12,7 @@ decltype(result) gauss(decltype(matrix)& matrix) {
 
     for (size_t k = 0; k < n; ++k) {
         auto maxEl = fabs(matrix[k][k]);
-        int maxRow = k;
+        auto maxRow = k;
         for (size_t i = k + 1; i < n; ++i) {
             if (fabs(matrix[i][k]) > maxEl) {
                 maxEl = fabs(matrix[i][k]);
@@ -24,7 +24,7 @@ decltype(result) gauss(decltype(matrix)& matrix) {
         }
         for (size_t i = k + 1; i < n; ++i) {
             double c = -matrix[i][k] / matrix[k][k];
-            for (int j = k; j < n + 1; ++j) {
+            for (size_t j = k; j < n + 1; ++j) {
                 if (k == j) {
                     matrix[i][j] = 0;
                 } else {
@@ -33,7 +33,7 @@ decltype(result) gauss(decltype(matrix)& matrix) {
             }
         }
     }
-    for (int i = n - 1; i >= 0; --i) {
+    for (auto i = static_cast<int >(n - 1); i >= 0; --i) {
         result[i] = matrix[i][n] / matrix[i][i];
         for (int k = i - 1; k >= 0; --k) {
             matrix[k][n] -= matrix[k][i] * result[i];
