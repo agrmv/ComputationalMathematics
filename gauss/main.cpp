@@ -7,7 +7,7 @@ static const int SIZE = 3;
 std::vector<std::vector<double>> matrix(SIZE, std::vector<double>(SIZE));
 std::vector<double> result(matrix.size());
 
-decltype(result) gauss(decltype(matrix)& matrix) {
+decltype(result)& gauss(decltype(matrix)& matrix) {
     auto n = matrix.size();
 
     for (size_t k = 0; k < n; ++k) {
@@ -33,7 +33,7 @@ decltype(result) gauss(decltype(matrix)& matrix) {
             }
         }
     }
-    for (auto i = static_cast<int >(n - 1); i >= 0; --i) {
+    for (auto i = static_cast<int>(n - 1); i >= 0; --i) {
         result[i] = matrix[i][n] / matrix[i][i];
         for (int k = i - 1; k >= 0; --k) {
             matrix[k][n] -= matrix[k][i] * result[i];
