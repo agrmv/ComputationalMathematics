@@ -33,9 +33,9 @@ decltype(result)& gauss(decltype(matrix)& matrix) {
             }
         }
     }
-    for (size_t  i = (n - 1); i > 0; --i) {
+    for (size_t i = (n - 1); i < n; --i) {
         result[i] = matrix[i][n] / matrix[i][i];
-        for (size_t  k = i - 1; k > 0; --k) {
+        for (size_t k = i - 1; k < i; --k) {
             matrix[k][n] -= matrix[k][i] * result[i];
         }
     }
@@ -54,13 +54,13 @@ void matrixPrint(decltype(matrix)& matrix) {
 
 void resultPrint(decltype(result)& matrix) {
     for (auto &i : matrix) {
-            std::cout << std::setw(SIZE) << i;
+            std::cout << i << "  ";
         }
     std::cout << std::endl;
 }
 
 int main() {
-    matrix = {{1, 2 , 3, 1}, {4, 5, 6, 1}, {1, 0, 1, 1}};
+    matrix = {{-1, -1 , 1, -1}, {2, -1, 2, 3}, {3, -1, 1, 3}};
     std::cout <<"Initial matrix: \n";
     matrixPrint(matrix);
     result = gauss(matrix);
