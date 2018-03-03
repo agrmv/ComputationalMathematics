@@ -23,6 +23,7 @@ int main() {
             seidel->matrixPrint();
             seidel->swapRows();
             seidel->variables = seidel->calculate(seidel->matrix);
+            //seidel->variables = seidel->calculateIter(seidel->matrix);
             std::cout << "\n The solution is as follows:\n";
             seidel->resultPrint(seidel->variables);
             break;
@@ -33,9 +34,12 @@ int main() {
             std::cin >> size;
             gauss->matrix.resize(size, vec(size + 1));
             gauss->result.resize(size);
-            gauss->matrix = {{5, 1,  2, 4},
+            /*gauss->matrix = {{5, 1,  2, 4},
                              {-3,  10, 2,  22},
-                             {2,  -1,  -5, -7}};
+                             {2,  -1,  -5, -7}};*/
+            gauss->matrix = {{-3,   2,  -4, -6},
+                             { 5,  -1,   2,  3},
+                             { 3,  -1,   1,  4}};
             std::cout << "Initial matrix: \n";
             gauss->matrixPrint();
             gauss->result = gauss->calculate(gauss->matrix);
