@@ -59,6 +59,7 @@ public:
     vec& calculate(matrix_t& matrix) {
         auto n = matrix.size();
         for (size_t k = 0; k < n; ++k) {
+            swapRows();
             for (size_t i = k + 1; i < n; ++i) {
                 double c = -matrix[i][k] / matrix[k][k];
                 for (size_t j = k; j < n + 1; ++j) {
@@ -90,18 +91,18 @@ public:
     Seidel(std::initializer_list<T> l) : variables(l) {}
     vec& calculate(matrix_t& matrix) {
         auto n = matrix.size();
-        uint32_t flag=0, count=0;
+        size_t flag=0, count=0;
         std::cout << "Iter" << std::setw(10);
-        for(uint32_t  i = 0 ; i < n; ++i) {
+        for(size_t  i = 0 ; i < n; ++i) {
             std::cout << "x" << i << std::setw(18);
         }
         std::cout<<"\n----------------------------------------------------------------------";
         do {
             std::cout << "\n" << count + 1 << "." << std::setw(16);
-            for (uint32_t i = 0; i < n; ++i) {
+            for (size_t i = 0; i < n; ++i) {
                 auto y = variables[i];
                 variables[i] = matrix[i][n];
-                for (uint32_t j = 0; j < n; ++j) {
+                for (size_t j = 0; j < n; ++j) {
                     if (j != i) {
                         variables[i] -= matrix[i][j] * variables[j];
                     }
@@ -112,6 +113,39 @@ public:
                 }
                 std::cout << variables[i] << std::setw(18);
             }
+            std::cout<<"\n";
+            count++;
+        } while(flag < n);
+
+        return variables;
+    }
+
+
+    vec& calculateIter(matrix_t& matrix) {
+        vec var2(matrix.size());
+        auto n = matrix.size();
+        size_t flag=0, count=0;
+        std::cout << "Iter" << std::setw(10);
+        for(size_t  i = 0 ; i < n; ++i) {
+            std::cout << "x" << i << std::setw(18);
+        }
+        std::cout<<"\n----------------------------------------------------------------------";
+        do {
+            std::cout << "\n" << count + 1 << "." << std::setw(16);
+            for (size_t i = 0; i < n; ++i) {
+                var2[i] = matrix[i][n];
+                for (size_t j = 0; j < n; ++j) {
+                    if (j != i) {
+                        var2[i] -= matrix[i][j] * variables[j];
+                    }
+                }
+                var2[i] /= matrix[i][i];
+                if (fabs(var2[i] - variables[i]) <= eps) {
+                    flag++;
+                }
+                std::cout << var2[i] << std::setw(18);
+            }
+            variables = var2;
             std::cout<<"\n";
             count++;
         } while(flag < n);
