@@ -17,7 +17,6 @@ double MethodDichotomy(const std::function<double(double)> &myFunction, double a
 }
 
 double MethodChord(const std::function<double(double)> &myFunction, double a, double b, const double& epsilon = 1e-5) {
-    double x;
     while (fabs(b - a) > epsilon) {
         a = b - (b - a) * myFunction(b) / (myFunction(b) - myFunction(a));
         b = a - (a - b) * myFunction(a) / (myFunction(a) - myFunction(b));
@@ -25,12 +24,12 @@ double MethodChord(const std::function<double(double)> &myFunction, double a, do
     return a;
 }
 
-
-double NewtonsMethod(const std::function<double(double)> &fx, const std::function<double(double)> &dfx, double x0, const double& epsilon = 1e-5) {
-    double x1  = x0 - fx(x0) / dfx(x0);         // первое приблжение
-    while (fabs(x1 - x0) > epsilon) {           // пока не достигнута точность
+double NewtonsMethod(const std::function<double(double)> &f, const std::function<double(double)> &df, double xn, const double& epsilon = 1e-5) {
+    double x1  = xn - f(xn)/df(xn);
+    double x0 = xn;
+    while(fabs(x0-x1) > epsilon) {
         x0 = x1;
-        x1 = x1 - fx(x1) / dfx(x1);             // последующие приближения
+        x1 = x1 - f(x1)/df(x1);
     }
     return x1;
 }
@@ -40,7 +39,6 @@ int main() {
         return pow(x, 3) - 2 * pow(x, 2) - 6 * x - 1;
     };
     double a = 3, b = 4;
-
     std::cout << "Методы\n1 - Половинного деления\n2 - Хорд\n3 - Ньютона" << std::endl;
     uint16_t method;
     std::cin >> method;
@@ -61,7 +59,8 @@ int main() {
             auto My2Derivative = [&myFunction](double x, double h = 0.1) -> auto {
                 return (myFunction(x + h) - 2 * myFunction(x) + myFunction(x - h)) / (h * h);
             };
-            std::cout << NewtonsMethod(myFunction, MyDerivative, 3) << std::endl;
+            auto xn = myFunction(a) * My2Derivative(a, 0.1) > 0 ? a : b;
+            std::cout << NewtonsMethod(myFunction, MyDerivative, xn) << std::endl;
             break;
         }
         default:break;
