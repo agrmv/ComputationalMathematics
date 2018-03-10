@@ -21,21 +21,21 @@ double MethodChord(const std::function<double(double)> &myFunction, double a, do
         a = b - (b - a) * myFunction(b) / (myFunction(b) - myFunction(a));
         b = a - (a - b) * myFunction(a) / (myFunction(a) - myFunction(b));
     }
-    return a;
+    return b;
 }
 
 double NewtonsMethod(const std::function<double(double)> &f, const std::function<double(double)> &df, double xn, const double& epsilon = 1e-5) {
-    double x1  = xn - f(xn)/df(xn);
+    double x1 = xn - f(xn) / df(xn);
     double x0 = xn;
-    while(fabs(x0-x1) > epsilon) {
+    while(fabs(x0 - x1) > epsilon) {
         x0 = x1;
-        x1 = x1 - f(x1)/df(x1);
+        x1 = x1 - f(x1) / df(x1);
     }
     return x1;
 }
 
 int main() {
-    auto myFunction = [](double x) -> auto{
+    auto myFunction = [](const double& x) -> auto{
         return pow(x, 3) - 2 * pow(x, 2) - 6 * x - 1;
     };
     double a = 3, b = 4;
@@ -52,11 +52,11 @@ int main() {
             break;
         }
         case 3: {
-            auto MyDerivative = [&myFunction](double x, double h = 0.1) -> auto {
+            auto MyDerivative = [&myFunction](const double& x, const double& h = 0.1) -> auto {
                 return (myFunction(x + h) - myFunction(x - h)) / (2 * h);
             };
 
-            auto My2Derivative = [&myFunction](double x, double h = 0.1) -> auto {
+            auto My2Derivative = [&myFunction](const double& x, const double& h = 0.1) -> auto {
                 return (myFunction(x + h) - 2 * myFunction(x) + myFunction(x - h)) / (h * h);
             };
             auto xn = myFunction(a) * My2Derivative(a, 0.1) > 0 ? a : b;
