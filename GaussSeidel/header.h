@@ -9,7 +9,7 @@
 #include <iterator>
 
 using matrix_t = std::vector<std::vector<double>>;
-using vec = std::vector<double>;
+using vector_t = std::vector<double>;
 
 template<class T>
 class Matrix {
@@ -20,6 +20,7 @@ public:
 
     void swapRows() {
         auto n = matrix.size();
+        #pragma omp parallel for
         for (size_t k = 0; k < n; ++k) {
             auto maxEl = fabs(matrix[k][k]);
             auto maxRow = k;
@@ -34,6 +35,14 @@ public:
             }
         }
     }
+    void matrixTranspose(matrix_t &matrix) {
+    #pragma omp parallel for
+        for(size_t i = 0; i < matrix.size(); ++i) {
+            for(size_t j = i + 1; j < matrix.size(); ++j) {
+                matrix[j][i] = matrix[i][j];
+            }
+        }
+    }
     void matrixPrint() {
         for (auto &i : matrix) {
             for (auto &j : i) {
@@ -42,7 +51,7 @@ public:
             std::cout << std::endl;
         }
     }
-    void resultPrint(vec& vec1) {
+    void vectorPrint(vector_t &vec1) {
         for (auto &i : vec1) {
             std::cout << i << "  ";
         }
@@ -53,13 +62,14 @@ public:
 template <class T>
 class Gauss : public Matrix<T> {
 public:
-    vec result;
+    vector_t result;
     Gauss() = default;
     Gauss(std::initializer_list<std::vector<T>> l1) : Matrix<T>(l1) {}
-    vec& calculate(matrix_t& matrix) {
+    vector_t& calculate(matrix_t& matrix) {
         auto n = matrix.size();
         for (size_t k = 0; k < n; ++k) {
-            swapRows();
+            #pragma omp parallel for
+            Gauss::swapRows();
             for (size_t i = k + 1; i < n; ++i) {
                 double c = -matrix[i][k] / matrix[k][k];
                 for (size_t j = k; j < n + 1; ++j) {
@@ -72,6 +82,7 @@ public:
             }
         }
         for (size_t i = (n - 1); i < n; --i) {
+            #pragma omp parallel for
             result[i] = matrix[i][n] / matrix[i][i];
             for (size_t k = i - 1; k < i; --k) {
                 matrix[k][n] -= matrix[k][i] * result[i];
@@ -84,12 +95,12 @@ public:
 template<class T>
 class Seidel : public Matrix<T> {
 public:
-    vec variables;
+    vector_t variables;
     double eps;
     Seidel() = default;
     Seidel(std::initializer_list<std::vector<T>> l1) : Matrix<T>(l1) {}
     Seidel(std::initializer_list<T> l) : variables(l) {}
-    vec& calculate(matrix_t& matrix) {
+    vector_t& calculate(matrix_t& matrix) {
         auto n = matrix.size();
         size_t flag=0, count=0;
         std::cout << "Iter" << std::setw(10);
@@ -100,6 +111,7 @@ public:
         do {
             std::cout << "\n" << count + 1 << "." << std::setw(16);
             for (size_t i = 0; i < n; ++i) {
+                #pragma omp parallel for
                 auto y = variables[i];
                 variables[i] = matrix[i][n];
                 for (size_t j = 0; j < n; ++j) {
@@ -119,38 +131,4 @@ public:
 
         return variables;
     }
-
-
-    vec& calculateIter(matrix_t& matrix) {
-        vec var2(matrix.size());
-        auto n = matrix.size();
-        size_t flag=0, count=0;
-        std::cout << "Iter" << std::setw(10);
-        for(size_t  i = 0 ; i < n; ++i) {
-            std::cout << "x" << i << std::setw(18);
-        }
-        std::cout<<"\n----------------------------------------------------------------------";
-        do {
-            std::cout << "\n" << count + 1 << "." << std::setw(16);
-            for (size_t i = 0; i < n; ++i) {
-                var2[i] = matrix[i][n];
-                for (size_t j = 0; j < n; ++j) {
-                    if (j != i) {
-                        var2[i] -= matrix[i][j] * variables[j];
-                    }
-                }
-                var2[i] /= matrix[i][i];
-                if (fabs(var2[i] - variables[i]) <= eps) {
-                    flag++;
-                }
-                std::cout << var2[i] << std::setw(18);
-            }
-            variables = var2;
-            std::cout<<"\n";
-            count++;
-        } while(flag < n);
-
-        return variables;
-    }
 };
-
