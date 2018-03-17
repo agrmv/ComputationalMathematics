@@ -3,11 +3,9 @@
 #include <vector>
 #include <iomanip>
 #include <functional>
-#include <algorithm>
 #include <cassert>
+#include "header.h"
 
-using vector_t = std::vector<double>;
-using matrix_t = std::vector<vector_t >;
 using funcN = std::function<double(const vector_t&)>;
 
 vector_t operator-(const vector_t& vec1, const vector_t& vec2) {
@@ -84,7 +82,7 @@ void newtonsMethod(const std::vector<funcN>& system, vector_t& values, double ep
     do {
         x = values;
         JacobianMatrix(system, values, w);
-        values = x - calculate(w);// CEquationSystem::calculate(w);
+        values = x - Gauss<double>::calculate(w);//calculate(w);
     } while (fabs(getNorm(values - x)) > epsilon);
 }
 

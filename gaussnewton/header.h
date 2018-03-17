@@ -9,8 +9,8 @@
 #include <cmath>
 #include <iterator>
 
-using matrix_t = std::vector<std::vector<double>>;
 using vector_t = std::vector<double>;
+using matrix_t = std::vector<vector_t>;
 
 template<class T>
 class Matrix {
@@ -66,11 +66,11 @@ public:
     vector_t result;
     Gauss() = default;
     Gauss(std::initializer_list<std::vector<T>> l1) : Matrix<T>(l1) {}
-    vector_t& calculate(matrix_t& matrix) {
+    static vector_t calculate(matrix_t& matrix) {
+        vector_t result(matrix.size(), 0);
         auto n = matrix.size();
         for (size_t k = 0; k < n; ++k) {
 #pragma omp parallel for
-            Gauss::swapRows();
             for (size_t i = k + 1; i < n; ++i) {
                 double c = -matrix[i][k] / matrix[k][k];
                 for (size_t j = k; j < n + 1; ++j) {
