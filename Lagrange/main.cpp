@@ -45,26 +45,37 @@ void display() {
     vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
     
     glClear(GL_COLOR_BUFFER_BIT);
+    
     glColor3f(0.0, 0.0, 0.0);
+    
+    glRasterPos2f(-1, -0.2);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
+    glRasterPos2f(1, -0.2);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
+    glRasterPos2f(0.1, 1);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
+    glRasterPos2f(0.1, -1);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
+    
     //OX
     glBegin(GL_LINES);
 		glVertex2f(xMin, 0);   
 		glVertex2f(xMax, 0); 
 		//Засечки
-		glVertex2f(-0.1, -1);
-		glVertex2f( 0.1, -1);
-		glVertex2f(-0.1,  1);
-		glVertex2f( 0.1,  1);  
+		glVertex2f(-0.05, -1);
+		glVertex2f( 0.05, -1);
+		glVertex2f(-0.05,  1);
+		glVertex2f( 0.05,  1);  
     glEnd();
 	//OY
     glBegin(GL_LINES);  
 		glVertex2f(0, yMin);
 		glVertex2f(0, yMax);
 		//Засечки
-		glVertex2f(-1, -0.1);
-		glVertex2f(-1,  0.1);
-		glVertex2f( 1, -0.1);
-		glVertex2f( 1,  0.1);
+		glVertex2f(-1, -0.05);
+		glVertex2f(-1,  0.05);
+		glVertex2f( 1, -0.05);
+		glVertex2f( 1,  0.05);
     glEnd();
  
     glBegin(GL_LINE_STRIP);  
@@ -81,7 +92,7 @@ void display() {
 int main(int argc, char** argv) {
     glutInit(&argc,argv); 
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(500, 500); 
+    glutInitWindowSize(800, 800); 
     glutInitWindowPosition(0,0);  
     glutCreateWindow("LAGRANGE"); 
     glClearColor(1.0 , 1.0 , 1.0 , 1.0); 
