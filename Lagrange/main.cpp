@@ -17,7 +17,7 @@ static const double step  =  0.5;
 void drawStringBitmap(void *font, const char* string) {
     while (*string) {
         glutBitmapCharacter(font, *string++);
-	}
+    }
 }
 
 double q(const vector_t &vec, double x, size_t n) {
@@ -45,24 +45,24 @@ void drawGrid() {
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(0.0, 0.0, 0.0);
     //OX
-    glBegin(GL_LINES);
-	    glVertex2f(xMin, 0);
+    glBegin(GL_LINES); 
+        glVertex2f(xMin, 0);
         glVertex2f(xMax, 0);
         for (double i = xMin; i <= xMax; i += step) {
-		    glVertex2f(-0.05, i);
+	    glVertex2f(-0.05, i);
             glVertex2f( 0.05, i);
         }
     glEnd();
     
     for (double i = xMin; i <= xMax; i += step) {
-	    glRasterPos2f(i, -0.2);
-	    std::ostringstream ch;
-	    ch << i;
-	    drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
+        glRasterPos2f(i, -0.2);
+        std::ostringstream ch;
+        ch << i;
+        drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
     }
     //OY
     glBegin(GL_LINES);
-	    glVertex2f(0, yMin);
+        glVertex2f(0, yMin);
         glVertex2f(0, yMax);
         for (double i = yMin; i <= yMax; i += step) {
             glVertex2f(i, -0.05);
@@ -80,7 +80,7 @@ void drawGrid() {
 }
 
 void display() {
-	/*size_t n;
+    /*size_t n;
     std::cout << "Enter n: ";
     std::cin >> n;
     vector_t _x(n + 1), y(n + 1);
