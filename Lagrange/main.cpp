@@ -15,8 +15,8 @@ static const double step  =  0.5;
 
 
 void drawStringBitmap(void *font, const char* string) {
-	while (*string) {
-		glutBitmapCharacter(font, *string++);
+    while (*string) {
+        glutBitmapCharacter(font, *string++);
 	}
 }
 
@@ -42,41 +42,41 @@ double p(const vector_t &_x, const vector_t &y, double x, size_t n) {
 }
 
 void drawGrid() {
-	glClear(GL_COLOR_BUFFER_BIT);   
+    glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(0.0, 0.0, 0.0);
     //OX
     glBegin(GL_LINES);
-		glVertex2f(xMin, 0);   
-		glVertex2f(xMax, 0); 
-		for (double i = xMin; i <= xMax; i += step) {
-			glVertex2f(-0.05, i);
-			glVertex2f( 0.05, i);
-		} 
+	    glVertex2f(xMin, 0);
+        glVertex2f(xMax, 0);
+        for (double i = xMin; i <= xMax; i += step) {
+		    glVertex2f(-0.05, i);
+            glVertex2f( 0.05, i);
+        }
     glEnd();
     
     for (double i = xMin; i <= xMax; i += step) {
-		glRasterPos2f(i, -0.2);
-		std::ostringstream ch;
-		ch << i;
-		drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
-	}
+	    glRasterPos2f(i, -0.2);
+	    std::ostringstream ch;
+	    ch << i;
+	    drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
+    }
     //OY
     glBegin(GL_LINES);
-		glVertex2f(0, yMin);
-		glVertex2f(0, yMax);
-		for (double i = yMin; i <= yMax; i += step) {
-			glVertex2f(i, -0.05);
-			glVertex2f(i,  0.05);
-		} 
+	    glVertex2f(0, yMin);
+        glVertex2f(0, yMax);
+        for (double i = yMin; i <= yMax; i += step) {
+            glVertex2f(i, -0.05);
+            glVertex2f(i,  0.05);
+        }
     glEnd();
-	
-	for (double i = yMin; i <= yMax; i += step) {
-		if (i == 0) continue;
-		glRasterPos2f(0.1, i);
-		std::ostringstream ch;
-		ch << i;
-		drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
-	}
+
+    for (double i = yMin; i <= yMax; i += step) {
+        if (i == 0) continue;
+        glRasterPos2f(0.1, i);
+        std::ostringstream ch;
+        ch << i;
+        drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
+    }
 }
 
 void display() {
@@ -93,23 +93,23 @@ void display() {
     vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
     vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
     size_t n = _x.size();    
-	
-	glPointSize(8);
-	glEnable(GL_POINT_SMOOTH);
-	glBegin(GL_POINTS);
-		glColor3f(1.0,0.0,0.0);
-		for (auto &i: _x) {
-				glVertex2d(i, p(_x, y, i, n));
-		}
-	glEnd();
-    
-    glBegin(GL_LINE_STRIP);  
-		glColor3f(1.0,0.0,0.0);
-		auto leftX  = *std::min_element(_x.begin(), _x.end()); 
-		auto rightX = *std::max_element(_x.begin(), _x.end()); 
-		for (double i = leftX; i < rightX; i += 0.001) { 
-			glVertex2d(i, p(_x, y, i, n));
-		} 
+
+    glPointSize(8);
+    glEnable(GL_POINT_SMOOTH);
+    glBegin(GL_POINTS);
+        glColor3f(1.0,0.0,0.0);
+        for (auto &i: _x) {
+            glVertex2d(i, p(_x, y, i, n));
+        }
+    glEnd();
+
+    glBegin(GL_LINE_STRIP);
+        glColor3f(1.0,0.0,0.0);
+        auto leftX  = *std::min_element(_x.begin(), _x.end());
+        auto rightX = *std::max_element(_x.begin(), _x.end());
+        for (double i = leftX; i < rightX; i += 0.001) {
+            glVertex2d(i, p(_x, y, i, n));
+        }
     glEnd();
     glFlush();
 }
