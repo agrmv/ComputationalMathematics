@@ -41,22 +41,8 @@ double p(const vector_t &_x, const vector_t &y, double x, size_t n) {
     return res;
 }
 
-void display() {
-	/*size_t n;
-    std::cout << "Enter n: ";
-    std::cin >> n;
-    vector_t _x(n + 1), y(n + 1);
-    for (size_t i = 0; i < n + 1; ++i) {
-        std::cout << "Enter x" << i << ": ";
-        std::cin >> _x[i];
-        std::cout << "Enter y" << i << ": ";
-        std::cin >> y[i];
-    }*/  
-    vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
-    vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
-    size_t n = _x.size();
-    
-    glClear(GL_COLOR_BUFFER_BIT);   
+void drawGrid() {
+	glClear(GL_COLOR_BUFFER_BIT);   
     glColor3f(0.0, 0.0, 0.0);
     //OX
     glBegin(GL_LINES);
@@ -91,6 +77,22 @@ void display() {
 		ch << i;
 		drawStringBitmap(GLUT_BITMAP_HELVETICA_18, ch.str().c_str());
 	}
+}
+
+void display() {
+	/*size_t n;
+    std::cout << "Enter n: ";
+    std::cin >> n;
+    vector_t _x(n + 1), y(n + 1);
+    for (size_t i = 0; i < n + 1; ++i) {
+        std::cout << "Enter x" << i << ": ";
+        std::cin >> _x[i];
+        std::cout << "Enter y" << i << ": ";
+        std::cin >> y[i];
+    }*/  
+    vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
+    vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
+    size_t n = _x.size();    
 	
 	glPointSize(8);
 	glEnable(GL_POINT_SMOOTH);
@@ -121,7 +123,8 @@ int main(int argc, char** argv) {
     glClearColor(1.0 , 1.0 , 1.0 , 1.0); 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(xMin - 0.2, xMax + 0.2, yMin - 0.2, yMax + 0.2); 
+    gluOrtho2D(xMin - 0.2, xMax + 0.2, yMin - 0.2, yMax + 0.2);
+    drawGrid();
     glutDisplayFunc(display); 
     glutMainLoop(); 
     return 0;
