@@ -89,10 +89,13 @@ void display() {
         std::cin >> _x[i];
         std::cout << "Enter y" << i << ": ";
         std::cin >> y[i];
-    }*/  
+    } */ 
     vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
     vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
-    size_t n = _x.size();    
+    if (_x.size() != y.size()) {
+		throw std::logic_error("Error vector's size");
+	}
+    size_t n = _x.size(); 
 
     glPointSize(8);
     glEnable(GL_POINT_SMOOTH);
