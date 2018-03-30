@@ -26,7 +26,7 @@ void drawStringBitmap(void *font, const char* string) {
     }
 }
 
-const vector_t aitken(const vector_t& _x, const vector_t& y, const double& x, const size_t& n) {
+const double aitken(const vector_t& _x, const vector_t& y, const double& x, const size_t& n) {
     vector_t p(n);
     for (size_t i = 0; i < n; ++i) {
         p[i] = y[i];
@@ -37,7 +37,7 @@ const vector_t aitken(const vector_t& _x, const vector_t& y, const double& x, co
         }
     }
 
-    return p;
+    return p[0];
 }
 
 void drawGrid() {
@@ -79,32 +79,20 @@ void drawGrid() {
 }
 
 void display() {
-    /*size_t n;
-    std::cout << "Enter n: ";
-    std::cin >> n;
-    vector_t _x(n + 1), y(n + 1);
-    for (size_t i = 0; i < n + 1; ++i) {
-        std::cout << "Enter x" << i << ": ";
-        std::cin >> _x[i];
-        std::cout << "Enter y" << i << ": ";
-        std::cin >> y[i];
-    } */
     vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
     vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
     if (_x.size() != y.size()) {
         throw std::logic_error("Error vector's size");
     }
     size_t n = _x.size();
-    vector_t temp(n);
 
     glBegin(GL_LINE_STRIP);
     glColor3f(1.0, 0.0, 0.0);
     auto leftX  = *std::min_element(_x.begin(), _x.end());
     auto rightX = *std::max_element(_x.begin(), _x.end());
-    for (double i = leftX ; i <= rightX; i += 0.001) {
-        temp = aitken(_x, y, i, n);
-        auto j = 0;
-        glVertex2d(i, temp[j++]);
+    auto j = 0;
+    for (auto i = leftX; i <= rightX; i += 0.001) {
+        glVertex2d(i, aitken(_x, y, i, n));
     }
     glEnd();
     glFlush();
