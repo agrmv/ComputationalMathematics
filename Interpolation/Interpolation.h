@@ -12,7 +12,7 @@ using vector_t = std::vector<T>;
 
 template <class T>
 class Interpolation {
-public:
+protected:
     size_t n;
     vector_t<T> x;
     vector_t<T> y;
@@ -20,22 +20,21 @@ public:
     Interpolation() {
         x = {-1.0, -0.6, -0.3, 0.3, 1.0};
         y = { 0.5,  1.0,  0.4, 0.1, 0.5};
-        if (x.size() != y.size()) {
-            throw std::logic_error("Error vector's size");
-        }
-        n = x.size();
+        n = (x.size() != y.size()) ? throw std::logic_error("Error vector's size") : x.size();
     }
     Interpolation(std::initializer_list<T> _x, std::initializer_list<T> _y) : x(_x), y(_y) {
-        if (x.size() != y.size()) {
-            throw std::logic_error("Error vector's size");
-        }
-        n = x.size();
+        n = (x.size() != y.size()) ? throw std::logic_error("Error vector's size") : x.size();
     }
+
+    Interpolation(const vector_t<T>& _x, const vector_t<T>& _y) : x(_x), y(_y) {
+        n = (x.size() != y.size()) ? throw std::logic_error("Error vector's size") : x.size();
+    }
+
     const double aitkenInterpolation(const double& _x);
     const double f(const int32_t& i, const size_t& k);
     const double newtonInterpolation(const double& _x);
-    const double q(const vector_t<T> &v, double x, size_t n);
-    const double lagrangeInterpolation(double _x);
+    const double q(const vector_t<T> &v, const double& x, size_t n);
+    const double lagrangeInterpolation(const double& _x);
     friend std::ostream& operator<< (std::ostream& os, const vector_t<T>& v);
     friend std::istream& operator>> (std::istream& is, vector_t<T>& v);
 };
@@ -51,7 +50,6 @@ const double Interpolation<T>::aitkenInterpolation(const double &_x) {
             p[k] = p[k + 1] + (p[k + 1] - p[k])*(_x - x[i])/(x[i] - x[k]);
         }
     }
-
     return p[0];
 }
 
@@ -75,7 +73,7 @@ const double Interpolation<T>::newtonInterpolation(const double &_x) {
 }
 
 template<class T>
-const double Interpolation<T>::q(const vector_t<T> &v, double x, size_t n) {
+const double Interpolation<T>::q(const vector_t<T> &v, const double& x, size_t n) {
     if (n >= v.size()) {
         return 1;
     }
@@ -89,7 +87,7 @@ const double Interpolation<T>::q(const vector_t<T> &v, double x, size_t n) {
 }
 
 template<class T>
-const double Interpolation<T>::lagrangeInterpolation(double _x) {
+const double Interpolation<T>::lagrangeInterpolation(const double& _x) {
     double res = 0;
     for (size_t i = 0; i <= n; ++i) {
         res += y[i] * q(x, _x, i);
