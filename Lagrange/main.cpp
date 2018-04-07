@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <vector>
 #include <sstream>
+#include <iterator>
 
 using vector_t = std::vector<double>;
 static const int16_t xMin = -2;
@@ -11,6 +12,12 @@ static const int16_t yMin = -2;
 static const int16_t yMax =  2;
 static const double step  =  0.5;
 
+std::ostream& operator<< (std::ostream& os, const vector_t& v) {
+    for (auto &i: v) {
+        os << i  << " ";
+    }
+    return os;
+}
 
 void drawStringBitmap(void *font, const char* string) {
     while (*string) {
@@ -87,7 +94,7 @@ void display() {
         std::cin >> _x[i];
         std::cout << "Enter y" << i << ": ";
         std::cin >> y[i];
-    } */
+    }*/
     vector_t _x{-1.0, -0.6, -0.3, 0.3, 1.0};
     vector_t  y{ 0.5,  1.0,  0.4, 0.1, 0.5};
     if (_x.size() != y.size()) {
