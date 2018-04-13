@@ -12,10 +12,10 @@ private:
     T yMin;
     T yMax;
     Grid() : step(0.5) {
-        xMin = (*std::min_element(x.begin(), x.end()) < *std::min_element(y.begin(), y.end())) ? *std::min_element(x.begin(), x.end()) : *std::min_element(y.begin(), y.end());
-        xMax = (*std::max_element(x.begin(), x.end()) > *std::max_element(y.begin(), y.end())) ? *std::max_element(x.begin(), x.end()) : *std::max_element(y.begin(), y.end());
-        yMin = (*std::min_element(y.begin(), y.end()) < *std::min_element(x.begin(), x.end())) ? *std::min_element(y.begin(), y.end()) : *std::min_element(x.begin(), x.end());
-        yMax = (*std::max_element(y.begin(), y.end()) > *std::max_element(x.begin(), x.end())) ? *std::max_element(y.begin(), y.end()) : *std::max_element(x.begin(), x.end());
+        xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
+        xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
+        yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
+        yMax = (*std::max_element(pointsY.begin(), pointsY.end()) > *std::max_element(pointsX.begin(), pointsX.end())) ? *std::max_element(pointsY.begin(), pointsY.end()) : *std::max_element(pointsX.begin(), pointsX.end());
     }
 
     void drawStringBitmap(void *font, const char *string) {
@@ -25,6 +25,8 @@ private:
     }
 
     void drawFunc(const uint16_t& func) {
+
+
         switch(func) {
             case 1:
                 glColor3f(1.0, 0.0, 0.0);
@@ -47,6 +49,14 @@ private:
                 glBegin(GL_LINE_STRIP);
                 for (auto i = xMin; i < xMax; i += 0.001) {
                     glVertex2d(i, aitkenInterpolation(i));
+                }
+                glEnd();
+                break;
+            case 4:
+                glColor3f(1.0, 0.0, 0.0);
+                glBegin(GL_LINE_STRIP);
+                for (auto i = xMin; i < xMax; i += 0.001) {
+                    glVertex2d(i, splineInterpolation(i));
                 }
                 glEnd();
                 break;
@@ -115,15 +125,15 @@ public:
     }
 
     Grid(std::initializer_list<T> _x, std::initializer_list<T> _y, const double& step = 0.5) : Interpolation(_x, _y), step(step) {
-        xMin = (*std::min_element(x.begin(), x.end()) < *std::min_element(y.begin(), y.end())) ? *std::min_element(x.begin(), x.end()) : *std::min_element(y.begin(), y.end());
-        xMax = (*std::max_element(x.begin(), x.end()) > *std::max_element(y.begin(), y.end())) ? *std::max_element(x.begin(), x.end()) : *std::max_element(y.begin(), y.end());
-        yMin = (*std::min_element(y.begin(), y.end()) < *std::min_element(x.begin(), x.end())) ? *std::min_element(y.begin(), y.end()) : *std::min_element(x.begin(), x.end());
-        yMax = (*std::max_element(y.begin(), y.end()) > *std::max_element(x.begin(), x.end())) ? *std::max_element(y.begin(), y.end()) : *std::max_element(x.begin(), x.end());
+        xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
+        xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
+        yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
+        yMax = (*std::max_element(pointsY.begin(), pointsY.end()) > *std::max_element(pointsX.begin(), pointsX.end())) ? *std::max_element(pointsY.begin(), pointsY.end()) : *std::max_element(pointsX.begin(), pointsX.end());
     }
     Grid(const vector_t<T>& _x, const vector_t<T>& _y, const double& step = 0.5) : Interpolation(_x, _y), step(step) {
-        xMin = (*std::min_element(x.begin(), x.end()) < *std::min_element(y.begin(), y.end())) ? *std::min_element(x.begin(), x.end()) : *std::min_element(y.begin(), y.end());
-        xMax = (*std::max_element(x.begin(), x.end()) > *std::max_element(y.begin(), y.end())) ? *std::max_element(x.begin(), x.end()) : *std::max_element(y.begin(), y.end());
-        yMin = (*std::min_element(y.begin(), y.end()) < *std::min_element(x.begin(), x.end())) ? *std::min_element(y.begin(), y.end()) : *std::min_element(x.begin(), x.end());
-        yMax = (*std::max_element(y.begin(), y.end()) > *std::max_element(x.begin(), x.end())) ? *std::max_element(y.begin(), y.end()) : *std::max_element(x.begin(), x.end());
+        xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
+        xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
+        yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
+        yMax = (*std::max_element(pointsY.begin(), pointsY.end()) > *std::max_element(pointsX.begin(), pointsX.end())) ? *std::max_element(pointsY.begin(), pointsY.end()) : *std::max_element(pointsX.begin(), pointsX.end());
     }
 };
