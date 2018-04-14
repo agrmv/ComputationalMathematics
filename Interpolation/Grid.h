@@ -6,12 +6,13 @@
 template <class T>
 class Grid : protected Interpolation<double> {
 private:
-    double step;
     T xMin;
     T xMax;
     T yMin;
     T yMax;
-    Grid() : step(0.5) {
+    double step;
+    double drawPoint;
+    Grid() : step(0.5), drawPoint(0) {
         xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
         xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
         yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
@@ -25,35 +26,85 @@ private:
     }
 
     void drawFunc(const uint16_t& func) {
+        xMin = *std::min_element(pointsX.begin(), pointsX.end());
+        xMax = *std::max_element(pointsX.begin(), pointsX.end());
         switch(func) {
             case 1:
+                glPointSize(10);
+                glBegin(GL_POINTS);
+                    glColor3f(1.0, 0.0, 1.0);
+                    glVertex2d(drawPoint, newtonInterpolation(drawPoint));
+                glEnd();
+                glPointSize(5);
+                glColor3f(0.0, 0.0, 1.0);
+                glBegin(GL_POINTS);
+                    for (double &i: pointsX) {
+                        glVertex2d(i, newtonInterpolation(i));
+                    }
+                glEnd();
                 glColor3f(1.0, 0.0, 0.0);
                 glBegin(GL_LINE_STRIP);
-                    for (auto i = xMin; i < xMax; i += 0.001) {
+                    for (double i = xMin; i <= xMax; i += 0.01) {
                         glVertex2d(i, newtonInterpolation(i));
                     }
                 glEnd();
                 break;
             case 2:
+                glPointSize(6);
+                glBegin(GL_POINTS);
+                    glColor3f(0, 0.0, 1.0);
+                    glVertex2d(drawPoint, lagrangeInterpolation(drawPoint));
+                glEnd();
+                glPointSize(5);
+                glColor3f(0.0, 0.0, 1.0);
+                glBegin(GL_POINTS);
+                    for (double &i: pointsX) {
+                        glVertex2d(i, lagrangeInterpolation(i));
+                    }
+                glEnd();
                 glColor3f(1.0, 0.0, 0.0);
                 glBegin(GL_LINE_STRIP);
-                for (auto i = xMin; i < xMax; i += 0.001) {
-                    glVertex2d(i, lagrangeInterpolation(i));
-                }
+                    for (double i = xMin; i < xMax; i += 0.01) {
+                        glVertex2d(i, lagrangeInterpolation(i));
+                    }
                 glEnd();
                 break;
             case 3:
+                glPointSize(6);
+                glBegin(GL_POINTS);
+                    glColor3f(0, 0.0, 1.0);
+                    glVertex2d(drawPoint, aitkenInterpolation(drawPoint));
+                glEnd();
+                glPointSize(5);
+                glColor3f(0.0, 0.0, 1.0);
+                glBegin(GL_POINTS);
+                    for (double &i: pointsX) {
+                        glVertex2d(i, aitkenInterpolation(i));
+                    }
+                glEnd();
                 glColor3f(1.0, 0.0, 0.0);
                 glBegin(GL_LINE_STRIP);
-                for (auto i = xMin; i < xMax; i += 0.001) {
-                    glVertex2d(i, aitkenInterpolation(i));
-                }
+                    for (double i = xMin; i < xMax; i += 0.01) {
+                        glVertex2d(i, aitkenInterpolation(i));
+                    }
                 glEnd();
                 break;
             case 4:
+                glPointSize(6);
+                glBegin(GL_POINTS);
+                    glColor3f(0, 0.0, 1.0);
+                    glVertex2d(drawPoint, splineInterpolation(drawPoint));
+                glEnd();
+                glPointSize(5);
+                glColor3f(0.0, 0.0, 1.0);
+                glBegin(GL_POINTS);
+                    for (double &i: pointsX) {
+                        glVertex2d(i, splineInterpolation(i));
+                    }
+                glEnd();
                 glColor3f(1.0, 0.0, 0.0);
                 glBegin(GL_LINE_STRIP);
-                for (auto i = xMin; i < xMax; i += 0.001) {
+                for (double i = xMin; i < xMax; i += 0.01) {
                     glVertex2d(i, splineInterpolation(i));
                 }
                 glEnd();
@@ -110,7 +161,7 @@ private:
 public:
     void initGlut(int argc, char **argv, const uint16_t& func) {
         glutInit(&argc, argv);
-        glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+        glutInitDisplayMode(GLUT_RGB);
         glutInitWindowSize(1000, 1000);
         glutInitWindowPosition(500, 500);
         glutCreateWindow("Interpolation");
@@ -122,13 +173,13 @@ public:
         glutMainLoop();
     }
 
-    Grid(std::initializer_list<T> _x, std::initializer_list<T> _y, const double& step = 0.5) : Interpolation(_x, _y), step(step) {
+    Grid(std::initializer_list<T> _x, std::initializer_list<T> _y, const double& _drawPoint, const double& step = 0.5) : Interpolation(_x, _y), step(step), drawPoint(_drawPoint) {
         xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
         xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
         yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
         yMax = (*std::max_element(pointsY.begin(), pointsY.end()) > *std::max_element(pointsX.begin(), pointsX.end())) ? *std::max_element(pointsY.begin(), pointsY.end()) : *std::max_element(pointsX.begin(), pointsX.end());
     }
-    Grid(const vector_t<T>& _x, const vector_t<T>& _y, const double& step = 0.5) : Interpolation(_x, _y), step(step) {
+    Grid(const vector_t<T>& _x, const vector_t<T>& _y, const double& _drawPoint, const double& step = 0.5) : Interpolation(_x, _y), step(step), drawPoint(_drawPoint) {
         xMin = (*std::min_element(pointsX.begin(), pointsX.end()) < *std::min_element(pointsY.begin(), pointsY.end())) ? *std::min_element(pointsX.begin(), pointsX.end()) : *std::min_element(pointsY.begin(), pointsY.end());
         xMax = (*std::max_element(pointsX.begin(), pointsX.end()) > *std::max_element(pointsY.begin(), pointsY.end())) ? *std::max_element(pointsX.begin(), pointsX.end()) : *std::max_element(pointsY.begin(), pointsY.end());
         yMin = (*std::min_element(pointsY.begin(), pointsY.end()) < *std::min_element(pointsX.begin(), pointsX.end())) ? *std::min_element(pointsY.begin(), pointsY.end()) : *std::min_element(pointsX.begin(), pointsX.end());
