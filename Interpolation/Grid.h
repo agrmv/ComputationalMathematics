@@ -25,8 +25,6 @@ private:
     }
 
     void drawFunc(const uint16_t& func) {
-
-
         switch(func) {
             case 1:
                 glColor3f(1.0, 0.0, 0.0);

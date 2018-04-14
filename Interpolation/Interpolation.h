@@ -33,88 +33,75 @@ public:
         n = (pointsX.size() != pointsY.size()) ? throw std::logic_error("Error vector's size") : pointsX.size();
     }
 
-    double aitkenInterpolation(const double& _x);
-    double f(const int32_t& i, const size_t& k);
-    double newtonInterpolation(const double& _x);
-    double q(const vector_t<T> &v, const double& x, size_t n);
-    double lagrangeInterpolation(const double& _x);
+    double aitkenInterpolation(const double& x);
+    double newtonInterpolation(const double& x);
+    double lagrangeInterpolation(const double& x);
     double splineInterpolation(double x);
     void sweetMethod(vector_t<Spline>& splines);
 
-    friend std::ostream& operator<< (std::ostream& os, const vector_t<T>& v);
-    friend std::istream& operator>> (std::istream& is, vector_t<T>& v);
+    friend std::ostream &operator<<(std::ostream &os, const vector_t<T> &v) {
+        for (const auto &i: v) {
+            os << i  << " ";
+        }
+        return os;
+    }
+    friend std::istream &operator>>(std::istream &is, vector_t<T> &v) {
+        for (auto &i: v) {
+            is >> i;
+        }
+        return is;
+    }
 };
 
 template<class T>
-double Interpolation<T>::aitkenInterpolation(const double &_x) {
+double Interpolation<T>::aitkenInterpolation(const double &x) {
     vector_t<T> p(n);
     for (size_t i = 0; i < n; ++i) {
         p[i] = pointsY[i];
     }
     for (size_t i = 0; i < n; ++i) {
         for (size_t k = i - 1; k <= i; --k) {
-            p[k] = p[k + 1] + (p[k + 1] - p[k])*(_x - pointsX[i])/(pointsX[i] - pointsX[k]);
+            p[k] = p[k + 1] + (p[k + 1] - p[k])*(x - pointsX[i])/(pointsX[i] - pointsX[k]);
         }
     }
     return p[0];
 }
 
 template<class T>
-double Interpolation<T>::f(const int32_t &i, const size_t &k) {
-    if (k > 1) {
-        return (f(i + 1, k - 1) - f(i, k - 1)) / (pointsX[i + k] - pointsX[i]);
-    }
-    return k == 0 ? pointsY[i] : (pointsY[i + 1] - pointsY[i]) / (pointsX[i + 1] - pointsX[i]);
-}
-
-template<class T>
-double Interpolation<T>::newtonInterpolation(const double &_x) {
+double Interpolation<T>::newtonInterpolation(const double &x) {
     double sum = 0.;
     double w = 1.;
+    std::function<double(const int32_t &i, const size_t &k)> f = [&](const int32_t &i, const size_t &k) -> double {
+            if (k > 1) {
+                return (f(i + 1, k - 1) - f(i, k - 1)) / (pointsX[i + k] - pointsX[i]);
+            }
+            return k == 0 ? pointsY[i] : (pointsY[i + 1] - pointsY[i]) / (pointsX[i + 1] - pointsX[i]);
+    };
     for (size_t i = 0; i < n; i++) {
         sum += w * f(0, i);
-        w *= (_x - pointsX[i]);
+        w *= (x - pointsX[i]);
     }
     return sum;
 }
 
 template<class T>
-double Interpolation<T>::q(const vector_t<T> &v, const double& x, size_t n) {
-    if (n >= v.size()) {
-        return 1;
-    }
-    double result = 1;
-    for (size_t i = 0; i < v.size(); ++i) {
-        if (i != n) {
-            result *= (x - v[i]) / (v[n] - v[i]);
-        }
-    }
-    return result;
-}
-
-template<class T>
-double Interpolation<T>::lagrangeInterpolation(const double& _x) {
+double Interpolation<T>::lagrangeInterpolation(const double& x) {
     double res = 0;
     for (size_t i = 0; i <= n; ++i) {
-        res += pointsY[i] * q(pointsX, _x, i);
+        res += pointsY[i] * ([&](const size_t& n) -> double {
+            if (n >= pointsX.size()) {
+                return 1;
+            }
+            double result = 1;
+            for (size_t j = 0; j < pointsX.size(); ++j) {
+                if (j != n) {
+                    result *= (x - pointsX[j]) / (pointsX[n] - pointsX[j]);
+                }
+            }
+            return result;
+        })(i);
     }
     return res;
-}
-
-template<class T>
-std::ostream &operator<<(std::ostream &os, const vector_t<T> &v) {
-    for (const auto &i: v) {
-        os << i  << " ";
-    }
-    return os;
-}
-
-template<class T>
-std::istream &operator>>(std::istream &is, vector_t<T> &v) {
-    for (auto &i: v) {
-        is >> i;
-    }
-    return is;
 }
 
 template<class T>
@@ -123,7 +110,6 @@ void Interpolation<T>::sweetMethod(vector_t<Spline>& splines) {
     vector_t<T> beta(n - 1);
 
     alpha[0] = beta[0] = 0.0;
-    //Вычисление прогоночных коэффициентов - прямой ход метода прогонки
     for (size_t i = 1; i < n - 1; i++)	{
         double hi  = pointsX[i] - pointsX[i - 1];
         double hi1 = pointsX[i + 1] - pointsX[i];
@@ -138,7 +124,6 @@ void Interpolation<T>::sweetMethod(vector_t<Spline>& splines) {
         beta[i] = (F - A * beta[i - 1]) / z;
     }
 
-    // нахождение решения - обратный ход метода прогонки
     for (size_t i = n - 2; i > 0; --i) {
         splines[i].c = alpha[i] * splines[i + 1].c + beta[i];
     }
@@ -154,10 +139,8 @@ double Interpolation<T>::splineInterpolation(double x) {
     }
 
     splines[0].c = splines[n - 1].c = 0.0;
-    // Решение СЛАУ относительно коэффициентов сплайнов c[i] методом прогонки для трехдиагональных матриц
     sweetMethod(splines);
 
-    // по известным коэффициентам c[i] находим значения b[i] и d[i]
     for (size_t i = n - 1; i > 0; i--) {
         double hi = pointsX[i] - pointsX[i - 1];
         splines[i].d = (splines[i].c - splines[i - 1].c) / hi;
@@ -167,13 +150,12 @@ double Interpolation<T>::splineInterpolation(double x) {
     size_t index;
 
     if (x <= splines[0].x) {
-        index = 0; // если pointsX меньше точки сетки pointsX[0] - пользуемся первым сплайном
+        index = 0;
     }
     else if (x >= splines[n - 1].x) {
-        index = n - 1; // если pointsX больше точки сетки pointsX[n - 1] - пользуемся последним сплайном
+        index = n - 1;
     }
     else {
-        // Иначе pointsX лежит между граничными точками сетки - производим бинарный поиск нужного эл-та массива
         size_t i = 0;
         size_t j = n - 1;
         while (i + 1 < j) {
