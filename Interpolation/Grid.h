@@ -109,6 +109,26 @@ private:
                 }
                 glEnd();
                 break;
+            case 5:
+                glPointSize(10);
+                glBegin(GL_POINTS);
+                glColor3f(0, 0.0, 1.0);
+                glVertex2d(drawPoint, trigonometricInterpolatation(drawPoint));
+                glEnd();
+                glPointSize(5);
+                glColor3f(0.0, 0.0, 1.0);
+                glBegin(GL_POINTS);
+                for (double &i: pointsX) {
+                    glVertex2d(i, trigonometricInterpolatation(i));
+                }
+                glEnd();
+                glColor3f(1.0, 0.0, 0.0);
+                glBegin(GL_LINE_STRIP);
+                for (double i = xMin; i < xMax; i += 0.01) {
+                    glVertex2d(i, trigonometricInterpolatation(i));
+                }
+                glEnd();
+                break;
             default:break;
         }
     }

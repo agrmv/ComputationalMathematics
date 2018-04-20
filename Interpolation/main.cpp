@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     //std::initializer_list<double> _y = { 0.5,  1.0,  0.4, 0.1, 0.5};
     double stepDraw = 2.0;
     double x = 1.5;
-    std::cout << "1 - Newton\n2 - Lagrange\n3 - Aitken\n4 - Spline\n";
+    std::cout << "1 - Newton\n2 - Lagrange\n3 - Aitken\n4 - Spline\n5 - Trigonometric\n";
     uint16_t func;
     std::cin >> func;
     //std::cout << "Enter point x: \n";
@@ -33,6 +33,10 @@ int main(int argc, char** argv) {
             break;
         case 4:
             std::cout << "Result: " << interpolation->splineInterpolation(x) << std::endl;
+            glut->initGlut(argc, argv, func);
+            break;
+        case 5:
+            std::cout << "Result: " << interpolation->trigonometricInterpolatation(x) << std::endl;
             glut->initGlut(argc, argv, func);
             break;
         default:break;

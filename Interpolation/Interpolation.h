@@ -6,6 +6,8 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <cmath>
+#define _USE_MATH_DEFINES
 
 template <class T>
 using vector_t = std::vector<T>;
@@ -38,6 +40,7 @@ public:
     double lagrangeInterpolation(const double& x);
     double splineInterpolation(double x);
     void sweetMethod(vector_t<Spline>& splines);
+    double trigonometricInterpolatation(const double &x);
 
     friend std::ostream &operator<<(std::ostream &os, const vector_t<T> &v) {
         for (const auto &i: v) {
@@ -51,6 +54,7 @@ public:
         }
         return is;
     }
+
 };
 
 template<class T>
@@ -174,4 +178,40 @@ double Interpolation<T>::splineInterpolation(double x) {
     double dx = x - splines[index].x;
 
     return splines[index].a + splines[index].b * dx + splines[index].c * dx * dx / 2 + splines[index].d * dx * dx * dx / 6;
+}
+
+template<class T>
+double Interpolation<T>::trigonometricInterpolatation(const double& x) {
+
+    auto A = [&](const size_t &j) -> double {
+        double S = 0.;
+        for (size_t k = 0; k < n - 1; ++k) {
+            S += pointsY[k] * sin(2 * M_PI * (k * j / n));
+        }
+
+        return ((1 / n) * S);
+    };
+
+    auto B = [&](const size_t &j) -> double {
+        double S = 0.;
+        if (j == 0)  {
+            for (size_t k = 0; k < n - 1; ++k) {
+                S += pointsY[k];
+            }
+            return ((1 / n) * S);
+        }
+        for (size_t k = 0; k < n - 1; ++k) {
+            S += pointsY[k] * cos(2 * M_PI * (k * j / n));
+        }
+
+        return ((1 / n) * S);
+    };
+
+    double y = B(0);
+
+    for (size_t j = 1; j < n; ++j) {
+        y += B(j) * cos(2 * M_PI * j * (x - pointsX[0]) / (pointsX[n] - pointsX[0])) + A(j) * sin(2 * M_PI * j * (x - pointsX[0]) / (pointsX[n] - pointsX[0]));
+    }
+
+    return y;
 }
