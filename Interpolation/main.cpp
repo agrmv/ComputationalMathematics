@@ -1,4 +1,3 @@
-#include <cmath>
 #include "Interpolation.h"
 #include "Grid.h"
 

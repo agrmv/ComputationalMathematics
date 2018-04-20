@@ -52,7 +52,7 @@ private:
             case 2:
                 glPointSize(10);
                 glBegin(GL_POINTS);
-                    glColor3f(0, 0.0, 1.0);
+                    glColor3f(1.0, 0.0, 1.0);
                     glVertex2d(drawPoint, lagrangeInterpolation(drawPoint));
                 glEnd();
                 glPointSize(5);
@@ -72,7 +72,7 @@ private:
             case 3:
                 glPointSize(10);
                 glBegin(GL_POINTS);
-                    glColor3f(0, 0.0, 1.0);
+                    glColor3f(1.0, 0.0, 1.0);
                     glVertex2d(drawPoint, aitkenInterpolation(drawPoint));
                 glEnd();
                 glPointSize(5);
@@ -92,7 +92,7 @@ private:
             case 4:
                 glPointSize(10);
                 glBegin(GL_POINTS);
-                    glColor3f(0, 0.0, 1.0);
+                    glColor3f(1.0, 0.0, 1.0);
                     glVertex2d(drawPoint, splineInterpolation(drawPoint));
                 glEnd();
                 glPointSize(5);
@@ -112,7 +112,7 @@ private:
             case 5:
                 glPointSize(10);
                 glBegin(GL_POINTS);
-                glColor3f(0, 0.0, 1.0);
+                glColor3f(1.0, 0.0, 1.0);
                 glVertex2d(drawPoint, trigonometricInterpolatation(drawPoint));
                 glEnd();
                 glPointSize(5);
