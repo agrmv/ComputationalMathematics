@@ -181,10 +181,14 @@ double Interpolation<T>::splineInterpolation(double x) {
 
 template<class T>
 double Interpolation<T>::trigonometricInterpolatation(const double& x) {
+    double t = pointsX[n - 1] - pointsX[0];
+    double pi2_n = 2 * M_PI / static_cast<double>(n);
+    double pi2_t = 2 * M_PI / t;
+
     auto A = [&](const size_t &j) -> double {
-        double S = 0;
-        for (size_t k = 0; k < n - 1; ++k) {
-            S += pointsY[k] * sin(2 * M_PI * static_cast<double>(k * j) / static_cast<double>(n));
+        double S = 0.;
+        for (size_t k = 0; k < n; ++k) {
+            S += pointsY[k] * sin(pi2_n * static_cast<double>(k * j));
         }
         return ((1 / static_cast<double>(n)) * S);
     };
@@ -192,21 +196,21 @@ double Interpolation<T>::trigonometricInterpolatation(const double& x) {
     auto B = [&](const size_t &j) -> double {
         double S = 0.;
         if (j == 0) {
-            for (size_t k = 0; k < n - 1; ++k) {
-                S += pointsY[k];
+            for (const auto &k: pointsY) {
+                S += k;
             }
             return ((1 / static_cast<double>(n)) * S);
         }
-        for (size_t k = 0; k < n - 1; ++k) {
-            S += pointsY[k] * cos(2 * M_PI * static_cast<double>(k * j) / static_cast<double>(n));
+        for (size_t k = 0; k < n; ++k) {
+            S += pointsY[k] * cos(pi2_n * static_cast<double>(k * j));
         }
-
         return ((1 / static_cast<double>(n)) * S);
     };
 
     double y = B(0);
-    for (size_t j = 1; j < n; ++j) {
-        y += B(j) * cos(2 * M_PI * j * (x - pointsX[0]) / (pointsX[n] - pointsX[0])) +  A(j) * sin(2 * M_PI * j * (x - pointsX[0]) / (pointsX[n] - pointsX[0]));
+    double m = (static_cast<double>(n) - 1) /2;
+    for (size_t j = 1; j < m; ++j) {
+        y += B(j) * cos(pi2_t * static_cast<double>(j) * (x - pointsX[0])) +  A(j) * sin(pi2_t * static_cast<double>(j) * (x - pointsX[0]));
     }
     return y;
 }
