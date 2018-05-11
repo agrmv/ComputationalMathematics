@@ -15,12 +15,13 @@ template <class T>
 class Interpolation {
 protected:
     size_t n;
-    vector_t<T> pointsX;
-    vector_t<T> pointsY;
     struct Spline {
         double a, b, c, d, x;
     };
 public:
+    vector_t<T> pointsX;
+    vector_t<T> pointsY;
+
     Interpolation() {
         pointsX = {-1.0, -0.6, -0.3, 0.3, 1.0};
         pointsY = { 0.5,  1.0,  0.4, 0.1, 0.5};
@@ -40,20 +41,8 @@ public:
     double splineInterpolation(double x);
     void   sweetMethod(vector_t<Spline>& splines);
     double trigonometricInterpolatation(const double &x);
-
-    friend std::ostream &operator<<(std::ostream &os, const vector_t<double> &v) {
-        for (const auto &i: v) {
-            os << i  << " ";
-        }
-        return os;
-    }
-    friend std::istream &operator>>(std::istream &is, vector_t<double> &v) {
-        for (auto &i: v) {
-            is >> i;
-        }
-        return is;
-    }
-
+    friend std::ostream &operator<<(std::ostream &os, const vector_t<double> &v);
+    friend std::istream &operator>>(std::istream &is, vector_t<double> &v);
 };
 
 template<class T>
@@ -213,4 +202,18 @@ double Interpolation<T>::trigonometricInterpolatation(const double& x) {
         y += B(j) * cos(pi2_t * static_cast<double>(j) * (x - pointsX[0])) +  A(j) * sin(pi2_t * static_cast<double>(j) * (x - pointsX[0]));
     }
     return y;
+}
+
+std::ostream &operator<<(std::ostream &os, const vector_t<double> &v) {
+    for (const auto &i: v) {
+        os << i  << " ";
+    }
+    return os;
+}
+
+std::istream &operator>>(std::istream &is, vector_t<double> &v) {
+    for (auto &i: v) {
+        is >> i;
+    }
+    return is;
 }

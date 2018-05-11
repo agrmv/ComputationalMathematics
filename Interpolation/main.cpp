@@ -17,6 +17,8 @@ int main(int argc, char** argv) {
     //std::cin >> stepDraw;
     std::unique_ptr<Grid<double>> glut(new Grid<double>(_x, _y, x, stepDraw));
     std::unique_ptr<Interpolation<double>> interpolation(new Interpolation<double>(_x, _y));
+    std::cout << interpolation->pointsX << std::endl;
+    std::cout << interpolation->pointsY << std::endl;
     switch(func) {
         case 1:
             std::cout << "Result: " << interpolation->newtonInterpolation(x) << std::endl;

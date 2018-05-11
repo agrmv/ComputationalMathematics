@@ -38,7 +38,7 @@ private:
                 glPointSize(5);
                 glColor3f(0.0, 0.0, 1.0);
                 glBegin(GL_POINTS);
-                    for (double &i: pointsX) {
+                    for (const double &i: pointsX) {
                         glVertex2d(i, newtonInterpolation(i));
                     }
                 glEnd();
@@ -58,7 +58,7 @@ private:
                 glPointSize(5);
                 glColor3f(0.0, 0.0, 1.0);
                 glBegin(GL_POINTS);
-                    for (double &i: pointsX) {
+                    for (const double &i: pointsX) {
                         glVertex2d(i, lagrangeInterpolation(i));
                     }
                 glEnd();
@@ -78,7 +78,7 @@ private:
                 glPointSize(5);
                 glColor3f(0.0, 0.0, 1.0);
                 glBegin(GL_POINTS);
-                    for (double &i: pointsX) {
+                    for (const double &i: pointsX) {
                         glVertex2d(i, aitkenInterpolation(i));
                     }
                 glEnd();
@@ -98,7 +98,7 @@ private:
                 glPointSize(5);
                 glColor3f(0.0, 0.0, 1.0);
                 glBegin(GL_POINTS);
-                    for (double &i: pointsX) {
+                    for (const double &i: pointsX) {
                         glVertex2d(i, splineInterpolation(i));
                     }
                 glEnd();
@@ -118,7 +118,7 @@ private:
                 glPointSize(5);
                 glColor3f(0.0, 0.0, 1.0);
                 glBegin(GL_POINTS);
-                for (double &i: pointsX) {
+                for (const double &i: pointsX) {
                     glVertex2d(i, trigonometricInterpolatation(i));
                 }
                 glEnd();

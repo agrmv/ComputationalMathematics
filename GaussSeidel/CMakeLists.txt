@@ -4,6 +4,3 @@ project(GaussSeidel)
 set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES main.cpp header.h)
 add_executable(GaussSeidel main.cpp header.h)
-
-#add_library(GaussSeidel STATIC ${SOURCE_FILES})
-target_link_libraries(GaussSeidel)

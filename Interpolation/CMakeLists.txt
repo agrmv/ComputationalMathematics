@@ -7,3 +7,4 @@ find_package(GLUT REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 add_executable(Interpolation main.cpp Interpolation.h Grid.h)
 target_link_libraries(Interpolation ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
+
