@@ -1,1 +1,0 @@
-/usr/bin/g++-6  -g   CMakeFiles/Lagrange.dir/main.cpp.o  -o Lagrange /usr/lib/x86_64-linux-gnu/libGL.so /usr/lib/x86_64-linux-gnu/libGLU.so /usr/lib/x86_64-linux-gnu/libglut.so 
