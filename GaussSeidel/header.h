@@ -3,6 +3,7 @@
 //
 #pragma once
 #include <iostream>
+#include <utility>
 #include <vector>
 #include <iomanip>
 #include <cmath>
@@ -22,10 +23,13 @@ public:
     matrix_t matrix;
     vector_t result;
     NonlinearEquations() = default;
-    NonlinearEquations(std::initializer_list<std::vector<double>> m, const size_t& n) : matrix(m) {
+    NonlinearEquations(std::initializer_list<std::vector<double>> &m, const size_t& n) : matrix(m) {
         matrix.resize(n + 1);
     }
-    NonlinearEquations(std::initializer_list<std::vector<double>> m, std::initializer_list<double> l, const size_t& n) : matrix(m), variables(l) {
+    NonlinearEquations(matrix_t &m, const size_t& n) : matrix(std::move(m)) {
+        matrix.resize(n + 1);
+    }
+    NonlinearEquations(std::initializer_list<std::vector<double>> &m, std::initializer_list<double> l, const size_t& n) : matrix(m), variables(l) {
         matrix.resize(n + 1);
         variables.resize(n);
     }
@@ -130,6 +134,15 @@ std::ostream &operator<<(std::ostream &os, const vector_t &v) {
 std::istream &operator>>(std::istream &is, vector_t &v) {
     for (auto &i: v) {
         is >> i;
+    }
+    return is;
+}
+
+std::istream &operator>>(std::istream &is, matrix_t &m) {
+    for (auto &i : m) {
+        for (auto &j : i) {
+            is >> j;
+        }
     }
     return is;
 }
