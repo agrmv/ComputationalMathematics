@@ -1,0 +1,1 @@
+/usr/bin/g++-6  -g   CMakeFiles/cursWork.dir/main.cpp.o  -o cursWork /usr/lib/x86_64-linux-gnu/libOpenGL.so /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libGLU.so /usr/lib/x86_64-linux-gnu/libglut.so 

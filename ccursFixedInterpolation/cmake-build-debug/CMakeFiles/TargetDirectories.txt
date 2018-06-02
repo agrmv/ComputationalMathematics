@@ -1,0 +1,3 @@
+/home/agrmv/learning/ComputationalMathematics/untitled/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/agrmv/learning/ComputationalMathematics/untitled/cmake-build-debug/CMakeFiles/cursWork.dir
+/home/agrmv/learning/ComputationalMathematics/untitled/cmake-build-debug/CMakeFiles/edit_cache.dir
