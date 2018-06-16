@@ -10,6 +10,9 @@
 
 template <class T>
 using vector_t = std::vector<T>;
+template <class T>
+using initlist_t = std::initializer_list<T>;
+using pair_t = std::pair<vector_t<double>::iterator, vector_t<double>::iterator>;
 
 template <class T>
 class Interpolation {
@@ -21,13 +24,12 @@ protected:
 public:
     vector_t<T> pointsX;
     vector_t<T> pointsY;
-
     Interpolation() {
         pointsX = {-1.0, -0.6, -0.3, 0.3, 1.0};
         pointsY = { 0.5,  1.0,  0.4, 0.1, 0.5};
         n = (pointsX.size() != pointsY.size()) ? throw std::logic_error("Error vector's size") : pointsX.size();
     }
-    Interpolation(std::initializer_list<T> _x, std::initializer_list<T> _y) : pointsX(_x), pointsY(_y) {
+    Interpolation(const initlist_t<T>& _x, const initlist_t<T>& _y) : pointsX(_x), pointsY(_y) {
         n = (pointsX.size() != pointsY.size()) ? throw std::logic_error("Error vector's size") : pointsX.size();
     }
 
@@ -126,7 +128,7 @@ double Interpolation<T>::splineInterpolation(double x) {
     vector_t<Spline> splines(n);
 
     for (size_t i = 0; i < n; i++)	{
-        splines[i].x = pointsX[i];
+        splines[i].x  = pointsX[i];
         splines[i].a  = pointsY[i];
     }
 
@@ -204,14 +206,16 @@ double Interpolation<T>::trigonometricInterpolatation(const double& x) {
     return y;
 }
 
-std::ostream &operator<<(std::ostream &os, const vector_t<double> &v) {
+template<class T>
+std::ostream &operator<<(std::ostream &os, const vector_t<T> &v) {
     for (const auto &i: v) {
-        os << i  << " ";
+        os << i << " ";
     }
     return os;
 }
 
-std::istream &operator>>(std::istream &is, vector_t<double> &v) {
+template<class T>
+std::istream &operator>>(std::istream &is, vector_t<T> &v) {
     for (auto &i: v) {
         is >> i;
     }
