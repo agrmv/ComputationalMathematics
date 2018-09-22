@@ -85,7 +85,7 @@ int main() {
         return log(1 + x) / x;
     };
     double a, b;
-    size_t eps;
+    double eps;
     std::cout << "Enter a: ";
     std::cin >> a;
     std::cout << "Enter b: ";
